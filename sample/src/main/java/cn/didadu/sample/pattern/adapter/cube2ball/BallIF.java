@@ -1,0 +1,13 @@
+package cn.didadu.sample.pattern.adapter.cube2ball;
+
+public interface BallIF {
+
+	double calculateArea();
+	
+	double calculateVolume();
+	
+	double getRadius();
+	
+	void setRadius(double radius); 
+	
+}

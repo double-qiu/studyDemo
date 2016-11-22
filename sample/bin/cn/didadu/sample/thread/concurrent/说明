@@ -1,0 +1,11 @@
+1、ConcurrentHashMap和ConcurrentQueue使用了类似CopyOnWrite的技术，允许并发的读取和写入，但是在修改完成之前，读取者仍旧不能看到他们。
+   注：CopyOnWrite容器只能保证数据的最终一致性，不能保证数据的实时一致性。所以如果你希望写入的的数据，马上能读到，请不要使用CopyOnWrite容器。
+   ConcurrentHashMap和ConcurrentQueue用的是CAS来实现无锁并发的
+
+2、ReadWriteLock 使用于写入不频繁，但是多个任务要经常读取。
+   ReadWriteLock 可以同时有多个读取者，只要他们不试图写入。如果写锁已经被其他任务持有，那么任何读取者都不能访问，直至这个写锁被释放为止。
+                 当写操作时，其他线程无法读取或写入数据，而当读操作时，其它线程无法写入数据，但却可以读取数据。
+
+3、CountDownLatch是等待多个任务完成，然后主程序再往下走
+
+4、CyclicBarrier是多个任务到某一个地方的时候集体等待，当所有的任务都到达该栅栏处，再一致地往下走
