@@ -7,13 +7,11 @@
   <packaging>pom</packaging>
   <modules>
     	<module>sample</module>
-    	<module>sp-boot-duredis-samplebbo-sample</module>
+    	<module>spring-boot-dubbo-sample</module>
     	<module>redis-sample</module>
     	<module>spring-activeMQ</module>
     	<module>redis-aop</module>
-    	<module>acitvemqDemo</module>
     	<module>activeMQDemo</module>
-    	<module>lwl-activemq</module>
   </modules>
     <properties>
         <springframework.version>4.1.3.RELEASE</springframework.version>
