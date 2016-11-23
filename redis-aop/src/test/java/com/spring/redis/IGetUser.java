@@ -1,14 +1,14 @@
 package com.spring.redis;
 
-import com.spring.redis.vo.TestVO;
+import com.spring.redis.vo.UserVO;
 
 public interface IGetUser {
 
-	public TestVO get(String uid);
+	public UserVO get(String uid);
 	
-	public TestVO add(String uid,TestVO vo);
+	public UserVO add(String uid,UserVO vo);
 	
 	public boolean delete(String uid);
 	
-	public TestVO update(String uid,TestVO vo);
+	public UserVO update(String uid,UserVO vo);
 }

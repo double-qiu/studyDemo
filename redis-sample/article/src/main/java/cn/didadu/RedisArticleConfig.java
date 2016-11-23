@@ -1,3 +1,10 @@
+/**  
+ * Project Name:article  
+ * File Name:ArticleTest.java  
+ * Package Name:cn.didadu  
+ * Date:2016年11月23日上午10:38:32  
+ * Copyright (c) 2016, LoveBeanTec All Rights Reserved.  
+ */
 package cn.didadu;
 
 
@@ -13,10 +20,13 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 
-/**
- * Created by zhangjing on 16-10-28.
- */
 
+/**
+ * ClassName: RedisArticleConfig  
+ * redis配置类
+ * @author DOUBLE
+ * @version
+ */
 @Configuration
 public class RedisArticleConfig {
     @Bean
@@ -24,7 +34,8 @@ public class RedisArticleConfig {
         return new JedisConnectionFactory();
     }
 
-    @Bean
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);

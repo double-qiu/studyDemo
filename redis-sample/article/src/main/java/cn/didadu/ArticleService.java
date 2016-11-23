@@ -1,3 +1,10 @@
+/**  
+ * Project Name:article  
+ * File Name:ArticleTest.java  
+ * Package Name:cn.didadu  
+ * Date:2016年11月23日上午10:38:32  
+ * Copyright (c) 2016, LoveBeanTec All Rights Reserved.  
+ */
 package cn.didadu;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +15,11 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by zhangjing on 16-10-28.
+ * ClassName: ArticleService  
+ * 业务接口服务实现
+ * @author DOUBLE
+ * @version
  */
-
 @Service
 public class ArticleService {
 
@@ -22,11 +31,13 @@ public class ArticleService {
     private RedisTemplate<String, Object> redisTemplate;
 
     /**
-     * 新增文章
-     * @param poster
-     * @param title
-     * @param link
-     * @return
+     *  postArticle:新增文章 
+     *  @return_type:String
+     *  @author DOUBLE
+     *  @param poster ： 文章作者
+     *  @param title  ：文章名称
+     *  @param link ： 文章链接
+     *  @return 文章ID
      */
     public String postArticle( String poster, String title, String link){
         //简单地获取文章自增ID
@@ -57,14 +68,19 @@ public class ArticleService {
      * @param user
      * @param articleId
      */
+    /**
+     *  voteArticle:文章投票
+     *  @return_type:void
+     *  @author DOUBLE
+     *  @param user : 投票人
+     *  @param articleId ：文章id
+     */
     public void voteArticle( String user, String articleId){
         long cutoff = (System.currentTimeMillis() / 1000) - ONE_WEEK_IN_SECONDS;
         //若文章超过一周则不再投票
         if(redisTemplate.opsForZSet().score("time:", articleId) < cutoff){
             return;
         }
-
-
         String id = articleId.substring(articleId.indexOf(':') + 1);
         if(redisTemplate.opsForSet().add("voted:" + id, user) == 1){
             /**
@@ -78,10 +94,12 @@ public class ArticleService {
     }
 
     /**
-     * 按排名获取文章
-     * @param page
-     * @param key
-     * @return
+     *  getArticles:按排名获取文章
+     *  @return_type:List<Map<String,String>>
+     *  @author DOUBLE
+     *  @param page 
+     *  @param key
+     *  @return
      */
     public List<Map<String,String>> getArticles(int page, String key) {
         int start = (page - 1) * ARTICLES_PER_PAGE;
@@ -90,7 +108,13 @@ public class ArticleService {
         Set<Object> ids = redisTemplate.opsForZSet().reverseRange(key, start, end);
         return getArticlesByIds(ids);
     }
-
+    /**
+     *  getArticlesByIds:获取文章列表
+     *  @return_type:List<Map<String,String>>
+     *  @author DOUBLE
+     *  @param ids 文章id集合
+     *  @return
+     */
     private List<Map<String,String>> getArticlesByIds(Set<Object> ids){
         List<Map<String,String>> articles = new ArrayList<>();
         ids.forEach(id -> {
@@ -110,23 +134,25 @@ public class ArticleService {
     }
 
     /**
-     * 按组获取文章
-     * @param groupId
-     * @return
+     *  getGroupArticles:按组获取文章
+     *  @return_type:List<Map<String,String>>
+     *  @author DOUBLE
+     *  @param groupId
+     *  @return
      */
     public List<Map<String,String>> getGroupArticles(String groupId) {
         Set<Object> ids = redisTemplate.opsForSet().members(groupId.toString());
         return getArticlesByIds(ids);
     }
-
-
     /**
-     * 添加组
-     * @param groupId
-     * @param articleId
+     *  addGroups: 添加组
+     *  @return_type:void
+     *  @author DOUBLE
+     *  @param groupId
+     *  @param articleId
      */
     public void addGroups(String groupId, String articleId) {
-        String article = "article:" + articleId;
+        //String article = "article:" + articleId;
         redisTemplate.opsForSet().add("group:" + groupId, articleId);
     }
 }

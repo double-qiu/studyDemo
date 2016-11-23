@@ -1,3 +1,10 @@
+/**  
+ * Project Name:article  
+ * File Name:ArticleTest.java  
+ * Package Name:cn.didadu  
+ * Date:2016年11月23日上午10:38:32  
+ * Copyright (c) 2016, LoveBeanTec All Rights Reserved.  
+ */
 package cn.didadu;
 
 import org.junit.Test;
@@ -10,9 +17,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by zhangjing on 16-11-3.
+ * ClassName: ArticleTest  
+ * redis测试
+ * @author DOUBLE
+ * @version
  */
-
 @RunWith(SpringRunner.class)
 @SpringBootTest()
 public class ArticleTest {
@@ -24,9 +33,11 @@ public class ArticleTest {
         System.out.println(articleService.postArticle("zhangjing","first article","www.baidu.com"));
         System.out.println(articleService.postArticle("maxiaoxia","second article","www.google.com"));
         System.out.println(articleService.postArticle("dada","third article","www.didazu.cn"));
-        articleService.voteArticle("maxiaoxia", "article:1");
+        articleService.voteArticle("maxiaoxia", "article:2");
         List<Map<String,String>> data = articleService.getArticles(1, "score:");
-        System.out.println("");
+        for (Map<String, String> map : data) {
+        	System.out.println(map.get("id")+"--->"+map.get("votes"));
+		}
         articleService.addGroups("myGroup", "article:1");
         articleService.addGroups("myGroup", "article:2");
         articleService.getGroupArticles("group:myGroup");

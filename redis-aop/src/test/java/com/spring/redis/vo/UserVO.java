@@ -1,13 +1,13 @@
 package com.spring.redis.vo;
 
-public class TestVO {
+public class UserVO {
 
-	public TestVO(){
+	public UserVO(){
 		
 	}
 	
 	
-	public TestVO(String uid, String name, String sex, int age, String iphone) {
+	public UserVO(String uid, String name, String sex, int age, String iphone) {
 		super();
 		this.uid = uid;
 		this.name = name;

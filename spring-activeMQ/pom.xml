@@ -7,6 +7,12 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>spring-activeMQ</name>
   <url>http://maven.apache.org</url>
+  
+  <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.7</java.version>
+    </properties>
   <dependencies>
     <dependency>  
             <groupId>log4j</groupId>  
@@ -168,9 +174,6 @@
 		</dependency>
   </dependencies>
   <build>
-    <finalName>Spring-activeMQ</finalName>
+    <finalName>spring-activeMQ</finalName>
   </build>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
 </project>

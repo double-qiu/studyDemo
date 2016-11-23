@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
  * Created by zhangjing on 16-11-3.
  */
 
+@SuppressWarnings("restriction")
 @Service
 public class ShopService {
     @Autowired
@@ -69,7 +70,7 @@ public class ShopService {
      * @param callback
      * @return
      */
-    public String cacheRequest(String request, Callback<String, String> callback) {
+	public String cacheRequest(String request, Callback<String, String> callback) {
         String pageKey = "cache:" + request.hashCode();
         //获取网页缓存内容
         String content = (String) redisTemplate.opsForValue().get(pageKey);

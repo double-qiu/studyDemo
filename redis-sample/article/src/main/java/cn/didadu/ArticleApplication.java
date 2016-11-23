@@ -1,12 +1,22 @@
+/**  
+ * Project Name:article  
+ * File Name:ArticleTest.java  
+ * Package Name:cn.didadu  
+ * Date:2016年11月23日上午10:38:32  
+ * Copyright (c) 2016, LoveBeanTec All Rights Reserved.  
+ */
 package cn.didadu;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-/**
- * Created by zhangjing on 16-10-28.
- */
 
+/**
+ * ClassName: ArticleApplication  
+ * springboot 启动类
+ * @author DOUBLE
+ * @version
+ */
 @SpringBootApplication
 public class ArticleApplication {
 
