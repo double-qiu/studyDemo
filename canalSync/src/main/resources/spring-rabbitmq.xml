@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans    
+      http://www.springframework.org/schema/beans/spring-beans.xsd   
+      http://www.springframework.org/schema/context   
+      http://www.springframework.org/schema/context/spring-context.xsd   
+      http://www.springframework.org/schema/aop   
+      http://www.springframework.org/schema/aop/spring-aop.xsd   
+      http://www.springframework.org/schema/tx   
+      http://www.springframework.org/schema/tx/spring-tx.xsd
+      http://www.springframework.org/schema/mvc  
+      http://www.springframework.org/schema/mvc/spring-mvc.xsd
+      http://www.springframework.org/schema/rabbit
+	  http://www.springframework.org/schema/rabbit/spring-rabbit-1.4.xsd">
+
+	<!-- RabbitMQ连接工厂参数 -->
+	<rabbit:connection-factory id="connectionFactory"
+		host="192.168.1.45" virtual-host="qgsvhost" channel-cache-size="25"
+		username="carl" password="carl" />
+
+	<rabbit:admin connection-factory="connectionFactory" />
+
+	<!--声明 exchange为qgs -->
+	<rabbit:template id="rabbitTemplate" message-converter="messageConverter"
+		connection-factory="connectionFactory" exchange="qgs" />
+
+	<!-- q_task_deleterows 为BinLog删除事件 -->
+	<rabbit:queue name="q_task_deleterows" durable="true"
+		exclusive="false" auto-delete="false" />
+	<!-- q_task_updaterows 为BinLog更新事件 -->
+	<rabbit:queue name="q_task_updaterows" durable="true"
+		exclusive="false" auto-delete="false" />
+
+	<!-- q_task_writerows 为BinLog新增事件 -->
+	<rabbit:queue name="q_task_writerows" durable="true"
+		exclusive="false" auto-delete="false" />
+
+	<!-- 声明消息转换器为SimpleMessageConverter -->
+	<bean id="messageConverter"
+		class="org.springframework.amqp.support.converter.SimpleMessageConverter">
+	</bean>
+
+	<rabbit:direct-exchange name="qgs" durable="true">
+		<rabbit:bindings>
+			<!-- 为qgs绑定三个事件 -->
+			<rabbit:binding queue="q_task_deleterows" key="q_task_deleterows" />
+			<rabbit:binding queue="q_task_updaterows" key="q_task_updaterows" />
+			<rabbit:binding queue="q_task_writerows" key="q_task_writerows" />
+		</rabbit:bindings>
+	</rabbit:direct-exchange>
+	<!-- 将RabbitMQ加入监听器 -->
+	<rabbit:listener-container
+		connection-factory="connectionFactory" acknowledge="auto"
+		task-executor="threadPool">
+		<rabbit:listener queues="q_task_deleterows" ref="canalDeleteLitener" />
+		<rabbit:listener queues="q_task_updaterows" ref="canalUpdateLitener" />
+		<rabbit:listener queues="q_task_writerows" ref="canalInsertLitener" />
+	</rabbit:listener-container>
+	<!-- canal 删除事件监听器 -->
+	<bean id="canalDeleteLitener" class="org.carl.canal.listener.CanalDeleteLitener" />
+	<!-- canal 更新事件监听器 -->
+	<bean id="canalUpdateLitener" class="org.carl.canal.listener.CanalUpdateLitener" />
+	<!-- canal 新增事件监听器 -->
+	<bean id="canalInsertLitener" class="org.carl.canal.listener.CanalInsertLitener">
+		<property name="rt" ref="jedisTemplate"></property>
+		<property name="tableInfos">
+			<list>
+				<ref bean="apt_detection" />
+				<ref bean="ips_log" />
+				<ref bean="web_defend" />
+				<ref bean="ddos_attack" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- 需要监听的表名称 -->
+	<bean name="apt_detection" class="org.carl.canal.util.TableInfo">
+		<property name="name" value="APT_DETECTION" />
+		<property name="value" value="APT_DETECTION" />
+	</bean>
+	<bean name="ips_log" class="org.carl.canal.util.TableInfo">
+		<property name="name" value="IPS_LOG" />
+		<property name="value" value="IPS_LOG" />
+	</bean>
+	<bean name="web_defend" class="org.carl.canal.util.TableInfo">
+		<property name="name" value="WEB_DEFEND" />
+		<property name="value" value="WEB_DEFEND" />
+	</bean>
+	<bean name="ddos_attack" class="org.carl.canal.util.TableInfo">
+		<property name="name" value="DDOS_ATTACK" />
+		<property name="value" value="DDOS_ATTACK" />
+	</bean>
+	<!-- 需要监听的表名称 -->
+
+
+
+	<!-- 异步线程池 -->
+	<bean id="threadPool"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<!-- 核心线程数 -->
+		<property name="corePoolSize" value="10" />
+		<!-- 最大线程数 -->
+		<property name="maxPoolSize" value="50" />
+		<!-- 队列最大长度 >=mainExecutor.maxSize -->
+		<property name="queueCapacity" value="1000" />
+		<!-- 线程池维护线程所允许的空闲时间 -->
+		<property name="keepAliveSeconds" value="300" />
+		<!-- 线程池对拒绝任务(无线程可用)的处理策略 -->
+		<property name="rejectedExecutionHandler">
+			<bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy" />
+		</property>
+	</bean>
+
+</beans>
