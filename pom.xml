@@ -13,6 +13,7 @@
     	<module>redis-aop</module>
     	<module>activeMQDemo</module>
     	<module>rabbitMQDemo</module>
+    	<module>easy-commons</module>
   </modules>
     <properties>
         <springframework.version>4.1.3.RELEASE</springframework.version>
