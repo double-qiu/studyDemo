@@ -14,6 +14,7 @@
     	<module>activeMQDemo</module>
     	<module>rabbitMQDemo</module>
     	<module>easy-commons</module>
+    	<module>shirodemo</module>
   </modules>
     <properties>
         <springframework.version>4.1.3.RELEASE</springframework.version>

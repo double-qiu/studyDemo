@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<context:component-scan base-package="org.tangjl.demo.shiro.controller" use-default-filters="false">
+		<!-- 只扫描org.tangjl.demo.shiro.controller包及子包下含有@Controller注解的类,并类注册为bean -->
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+
+	<!-- 这一段有一个简写模式,见此标注内部代码:<mvc:annotation-driven /> -->
+	<!--<mvc:annotation-driven>-->
+		<!--<mvc:message-converters>-->
+			<!--&lt;!&ndash; 解决返回JSON中文乱码 &ndash;&gt;-->
+			<!--<bean class="org.springframework.http.converter.StringHttpMessageConverter">-->
+				<!--<constructor-arg name="defaultCharset" value="UTF-8" />-->
+			<!--</bean>-->
+			<!--<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />-->
+		<!--</mvc:message-converters>-->
+	<!--</mvc:annotation-driven>-->
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<!-- 解决返回JSON中文乱码 -->
+				<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+					<constructor-arg name="defaultCharset" value="UTF-8"/>
+				</bean>
+				<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+			</list>
+		</property>
+	</bean>
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+
+	<!-- 允许对以下路径资源(静态资源)的访问 -->
+	<mvc:resources mapping="/resources/**" location="/resources/"/>
+	<mvc:resources mapping="/modules/**/*.js" location="/modules/"/>
+
+	<!-- 视图解析器策略 和 视图解析器 -->
+	<!-- exposeRequestAttributes，exposeSessionAttributes 是请求和会话属性都被复制到模板的属性集中， 
+		可以使用FreeMarker的表达式语言来访问并显示。 exposeSpringMacroHelpers使用这些宏 -->
+	<bean id="viewResolver"
+		  class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="cache" value="true"/>
+		<property name="prefix" value=""/>
+		<property name="suffix" value=".html"/>
+		<property name="contentType" value="text/html;charset=UTF-8"/>
+		<property name="requestContextAttribute" value="request"/>
+		<property name="exposeSpringMacroHelpers" value="true"/>
+		<property name="exposeRequestAttributes" value="true"/>
+		<property name="exposeSessionAttributes" value="true"/>
+		<property name="allowSessionOverride" value="true"/>
+	</bean>
+	<bean id="freemarkerConfig"
+		  class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPath" value="/modules/"/>
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="template_update_delay">0</prop>
+				<prop key="default_encoding">UTF-8</prop>
+				<prop key="number_format">0.##########</prop>
+				<prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+				<prop key="classic_compatible">true</prop>
+				<prop key="template_exception_handler">ignore</prop>
+			</props>
+		</property>
+	</bean>
+	<!-- 视图解释 end -->
+
+	<!-- 以下是Shiro的配置,
+		一般情况下是配置在spring-application-context.xml中,
+		但是因为此Demo不想做那么复杂,也就没有了Service和dao,所以就直接配置在这里了
+	-->
+	<bean id="myRealm" class="org.tangjl.demo.shiro.realm.UserRealm"/>
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="myRealm"/>
+	</bean>
+	<!-- 配置shiro过滤器工厂
+		注意:默认情况下ShiroFilterFactoryBean实例化的id必须和DelegatingFilterProxy的filter-name一样
+		如果现在spring自动注入时配置的ShiroFilterFactoryBean的id是shiroFilter
+		那么filter-name也必须是shiroFilter
+		或者可以通过指定filter的targetBeanName参数定义ShiroFilterFactoryBean的id
+	 -->
+	<bean id="shiroFilterFactoryBean" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager"/>
+		<property name="loginUrl" value="/login"/>
+		<property name="successUrl" value="/index"/>
+		<property name="unauthorizedUrl" value="/error"/>
+		<property name="filterChainDefinitions">
+			<value>
+				/resources/**=anon
+				/login=anon
+				/login/login=anon
+				/error=anon
+				/admin=authc,roles[admin]
+				/noAuth=roles[noAuth]
+				/**=authc
+			</value>
+		</property>
+	</bean>
+	<!-- 以上是Shiro的配置 -->
+</beans>

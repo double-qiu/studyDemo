@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<title>登录</title>
+
+<base href="${CONTEXT_PATH}/">
+<script type="text/javascript">if (window != top) { top.location.href = window.location.href; }</script>
+<link rel="stylesheet" href="resources/Flat-UI-master/dist/css/vendor/bootstrap.min.css">
+<!-- Loading Flat UI -->
+<link rel="stylesheet" href="resources/Flat-UI-master/dist/css/flat-ui.min.css">
+<style type="text/css">
+.container { width: 970px !important; }
+.login-icon { top: 100px; }
+.login-form { margin-top: -56px; }
+.demo-type-example { color: #48C9B0; text-align: center; }
+</style>
+</head>
+<body>
+<div class="container">
+	<div class="login">
+		<div class="login-screen">
+			<div class="login-icon">
+				<img src="resources/Flat-UI-master/dist/img/login/login.png" alt="Welcome to System" />
+				<h4>Welcome to <small>System</small></h4>
+			</div>
+			<div class="login-form">
+				<form id="login-form">
+					<div class="form-group">
+						<input type="text" class="form-control login-field"
+							placeholder="请输入您的用户名" id="login-name" name="account" />
+						<label class="login-field-icon fui-user" for="login-name"></label>
+					</div>
+
+					<div class="form-group">
+						<input type="password" class="form-control login-field"
+							placeholder="请输入您的密码" id="login-pass" name="password" />
+						<label class="login-field-icon fui-lock" for="login-pass"></label>
+					</div>
+					<a href="javascript:void(0);" class="btn btn-primary btn-lg btn-block" id="login-submit">登录</a>
+					<a href="javascript:void(0);" class="btn btn-success btn-lg btn-block" id="login-register">注册一个新账号</a>
+			        <a href="javascript:void(0);" class="login-link" id="login-forget">忘记密码?</a>
+
+					<div class="demo-type-example">
+						<h5 id="login_error_info"></h5>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- javascript -->
+<script type="text/javascript" src="resources/Flat-UI-master/dist/js/vendor/jquery.min.js"></script>
+<script type="text/javascript" src="resources/Flat-UI-master/dist/js/flat-ui.min.js"></script>
+<script type="text/javascript">
+$(function () {
+	// 设置光标在用户名输入框内
+	$('#login-name').focus();
+
+	var login = function () {
+		var name = $('#login-name').val();
+		var password = $('#login-pass').val();
+		if (name && password) {
+			$("#login_error_info").html("登录中,请稍候...");
+			var params = $("#login-form").serialize();
+			$.ajax({
+				url : "login/login",
+				type : "post",
+				dataType : 'json',
+				data : params,
+				success : function (data) {
+					if(data.status){
+						window.location.href = "index";
+					} else {
+						$('#login-name').focus();
+						$("#login_error_info").html("用户名或登录密码错误");
+					}
+				},
+				error : function (XMLHttpRequest, textStatus, errorThrown) {
+					$('#login-name').focus();
+					$("#login_error_info").html("登录超时");
+				}
+			});
+		} else {
+			$('#login-name').focus();
+			$("#login_error_info").html("请输入用户名或密码");
+		}
+	};
+
+	// 用户登录
+	$('#login-submit').click(login);
+	$('body').keydown(function (e) {
+		var code = (e ? e : event).keyCode;
+		// 清除错误提示信息
+		$('#login_error_info').html('');
+		if (code == 13) {
+			login();
+		}
+	});
+
+	// 用户注册
+	var register = function () {
+		top.location.href = 'login/register';
+	};
+	$('#login-register').click(register);
+
+	// 忘记密码
+	var forget = function () {
+		
+	};
+	$('#login-forget').click(forget);
+});
+</script>
+</body>
+</html>
