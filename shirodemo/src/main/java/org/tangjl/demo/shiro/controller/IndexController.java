@@ -12,7 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author tangjialin on 2016-01-09 0009.
+ * ClassName: IndexController  
+ * (TODO:简述该类作用)
+ * @author DOUBLE
+ * @version
  */
 @Controller
 @RequestMapping
