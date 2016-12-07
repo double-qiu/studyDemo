@@ -12,3 +12,6 @@
 
 6. redis-sample -----------  redis使用示例
 
+7. shirodemo -----------  shiro使用示例
+
+7. rabbitMQDemo -----------  rabbitMQ使用示例
