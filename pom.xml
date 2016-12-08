@@ -17,6 +17,7 @@
     	<module>shirodemo</module>
     	<module>luceneDemo</module>
     	<module>quartzDemo</module>
+    	<module>crawlerDemo</module>
   </modules>
     <properties>
         <springframework.version>4.1.3.RELEASE</springframework.version>
