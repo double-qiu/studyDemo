@@ -134,7 +134,7 @@ public class Main {
             String imgUrl = item.getImage();
             HttpGet httpGet = new HttpGet("http:"+imgUrl);
             CloseableHttpResponse response = HttpClients.createDefault().execute(httpGet);
-            FileUtils.writeByteArrayToFile(new File("E:\\1221\\jd-monitor\\"+System.currentTimeMillis()+".jpg"), IOUtils.toByteArray(response.getEntity().getContent()));
+            FileUtils.writeByteArrayToFile(new File("E:\\crawler\\jd-monitor\\"+System.currentTimeMillis()+".jpg"), IOUtils.toByteArray(response.getEntity().getContent()));
         }
         System.out.println("下载完成!");
         
