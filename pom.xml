@@ -19,6 +19,7 @@
     	<module>quartzDemo</module>
     	<module>crawlerDemo</module>
     	<module>solrDemo</module>
+    	<module>fastdfs-client</module>
   </modules>
     <properties>
         <springframework.version>4.1.3.RELEASE</springframework.version>
