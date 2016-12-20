@@ -1,0 +1,35 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+	<display-name>Archetype Created Web Application</display-name>
+
+	<!-- 域名配置，注意这个路径的配置，他可以关系到cookie的相关path路径的限定 -->
+	<context-param>
+		<param-name>DomainName</param-name>
+		<param-value>127.0.0.1</param-value>
+	</context-param>
+
+	<!-- cookie名称，需要注意多个相关项目中可以设定为相同的 -->
+	<context-param>
+		<param-name>CookieName</param-name>
+		<param-value>fykj</param-value>
+	</context-param>
+
+	<!-- 验证系统的验证servlet -->
+	<servlet>
+		<servlet-name>AuthServlet</servlet-name>
+		<servlet-class>com.fykj.auth.servlet.AuthServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AuthServlet</servlet-name>
+		<url-pattern>/jsp/login.page</url-pattern>
+	</servlet-mapping>
+	
+	
+	<welcome-file-list>
+		<welcome-file>login.jsp</welcome-file>
+	</welcome-file-list>
+</web-app>

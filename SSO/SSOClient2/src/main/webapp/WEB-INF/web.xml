@@ -1,0 +1,35 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+	<display-name>Archetype Created Web Application</display-name>
+
+	<servlet>
+		<servlet-name>ClientServlet</servlet-name>
+		<servlet-class>com.fykj.client.servlet.SsoClientServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ClientServlet</servlet-name>
+		<url-pattern>/index</url-pattern>
+	</servlet-mapping>
+
+	<!-- cookie名称，需要注意多个相关项目中可以设定为相同的 -->
+	<context-param>
+		<param-name>CookieName</param-name>
+		<param-value>fykj</param-value>
+	</context-param>
+
+	<!-- 认证系统的路径，在未登陆状态下，是会跳转到这个第三方的认证系统中的 -->
+	<context-param>
+		<param-name>SSOLoginPage</param-name>
+		<param-value>
+			http://127.0.0.1:8080/SSOAuth/login.jsp
+		</param-value>
+	</context-param>
+	
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+</web-app>
